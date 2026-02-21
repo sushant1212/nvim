@@ -1,8 +1,8 @@
 return {
-    'nvim-treesitter/nvim-treesitter',
+    "nvim-treesitter/nvim-treesitter",
     dependencies = {
         {
-            'nvim-treesitter/nvim-treesitter-context',
+            "nvim-treesitter/nvim-treesitter-context",
             opts = {
                 max_lines = 4,
                 multiline_threshold = 2,
@@ -10,17 +10,17 @@ return {
         },
     },
     lazy = false,
-    branch = 'main',
-    build = ':TSUpdate',
+    branch = "main",
+    build = ":TSUpdate",
     config = function()
-        local ts = require('nvim-treesitter')
+        local ts = require("nvim-treesitter")
 
         -- State tracking for async parser loading
         local parsers_loaded = {}
         local parsers_pending = {}
         local parsers_failed = {}
 
-        local ns = vim.api.nvim_create_namespace('treesitter.async')
+        local ns = vim.api.nvim_create_namespace("treesitter.async")
 
         -- Helper to start highlighting and indentation
         local function start(buf, lang)
@@ -32,45 +32,44 @@ return {
         end
 
         -- Install core parsers after lazy.nvim finishes loading all plugins
-        vim.api.nvim_create_autocmd('User', {
-            pattern = 'LazyDone',
+        vim.api.nvim_create_autocmd("User", {
+            pattern = "LazyDone",
             once = true,
             callback = function()
                 ts.install({
-                    'bash',
-                    'comment',
-                    'css',
-                    'diff',
-                    'git_config',
-                    'git_rebase',
-                    'gitcommit',
-                    'gitignore',
-                    'go',
-                    'html',
-                    'javascript',
-                    'json',
-                    'latex',
-                    'lua',
-                    'luadoc',
-                    'make',
-                    'markdown',
-                    'markdown_inline',
-                    'python',
-                    'query',
-                    'regex',
-                    'rust',
-                    'toml',
-                    'tsx',
-                    'typescript',
-                    'vim',
-                    'vimdoc',
-                    'vue',
+                    "bash",
+                    "comment",
+                    "css",
+                    "diff",
+                    "git_config",
+                    "git_rebase",
+                    "gitcommit",
+                    "gitignore",
+                    "go",
+                    "html",
+                    "javascript",
+                    "json",
+                    "latex",
+                    "lua",
+                    "luadoc",
+                    "make",
+                    "markdown",
+                    "markdown_inline",
+                    "python",
+                    "query",
+                    "regex",
+                    "rust",
+                    "toml",
+                    "tsx",
+                    "typescript",
+                    "vim",
+                    "vimdoc",
+                    "vue",
                 }, {
-                        max_jobs = 8,
-                    })
+                    max_jobs = 8,
+                })
             end,
         })
-
 
         -- Decoration provider for async parser loading
         vim.api.nvim_set_decoration_provider(ns, {
@@ -91,24 +90,24 @@ return {
             end),
         })
 
-        local group = vim.api.nvim_create_augroup('TreesitterSetup', { clear = true })
+        local group = vim.api.nvim_create_augroup("TreesitterSetup", { clear = true })
 
         local ignore_filetypes = {
-            'checkhealth',
-            'lazy',
-            'mason',
-            'snacks_dashboard',
-            'snacks_notif',
-            'snacks_win',
-            'NvimTree',
-            'fidget',
-            'trouble',
+            "checkhealth",
+            "lazy",
+            "mason",
+            "snacks_dashboard",
+            "snacks_notif",
+            "snacks_win",
+            "NvimTree",
+            "fidget",
+            "trouble",
         }
 
         -- Auto-install parsers and enable highlighting on FileType
-        vim.api.nvim_create_autocmd('FileType', {
+        vim.api.nvim_create_autocmd("FileType", {
             group = group,
-            desc = 'Enable treesitter highlighting and indentation (non-blocking)',
+            desc = "Enable treesitter highlighting and indentation (non-blocking)",
             callback = function(event)
                 if vim.tbl_contains(ignore_filetypes, event.match) then
                     return
