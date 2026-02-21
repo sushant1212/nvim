@@ -52,13 +52,6 @@ return {
                         bg = c.bg_dark,
                         fg = c.bg_dark,
                     }
-                    hl.BlinkCmpMenu = {
-                        bg = c.bg_float,
-                    }
-                    hl.BlinkCmpMenuBorder = {
-                        fg = c.border_highlight,
-                        bg = c.bg_float,
-                    }
                 end,
             })
             vim.cmd("colorscheme tokyonight-night")
