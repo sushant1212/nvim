@@ -6,7 +6,7 @@ return {
                 theme = {
                     all = {
                         ui = {
-                            bg_gutter = "none"
+                            bg_gutter = "none"  -- the line numbers and the error col are highlighted otherwise
                         }
                     }
                 }
