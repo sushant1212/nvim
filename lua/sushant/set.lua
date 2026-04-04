@@ -23,10 +23,10 @@ vim.opt.incsearch = true
 vim.opt.termguicolors = true
 
 vim.opt.scrolloff = 8
-vim.opt.signcolumn = "yes"
+vim.opt.signcolumn = "yes"  -- This adds a column for showing lsp errors
 vim.opt.isfname:append("@-@")
 
 vim.opt.updatetime = 50
 
-vim.opt.colorcolumn = "120"
+vim.opt.colorcolumn = "120"  -- A colored column number to prevent writing longer lines
 

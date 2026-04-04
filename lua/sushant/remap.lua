@@ -60,7 +60,7 @@ end)
 
 -- automatically setting a mark when I move up
 vim.keymap.set('n', 'gg', 'magg')
-vim.keymap.set('n', 'G', 'magg')
+vim.keymap.set('n', 'G', 'maG')
 
 -- Quickfix list shortcuts
 vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
