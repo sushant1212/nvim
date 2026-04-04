@@ -1,6 +1,6 @@
 return {
     'nvim-lualine/lualine.nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    dependencies = { 'nvim-tree/nvim-web-devicons', 'tpope/vim-fugitive' },
     config = function ()
         require('lualine').setup {
             options = {
@@ -37,7 +37,7 @@ return {
             },
             sections = {
                 lualine_a = {'mode'},
-                lualine_b = {'branch', 'diff', 'diagnostics'},
+                lualine_b = {'FugitiveHead', 'diff', 'diagnostics'},
                 lualine_c = {
                     {'filename', path = 1}
                 },
