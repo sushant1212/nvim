@@ -29,15 +29,6 @@ vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
-vim.keymap.set(
-    "n",
-    "<leader>ee",
-    "oif err != nil {<CR>}<Esc>Oreturn err<Esc>"
-)
-
--- vim.keymap.set("n", "<leader><leader>", function()
---     vim.cmd("so")
--- end)
 
 -- Quotes and braces
 vim.keymap.set("v", "<leader>\"", "<Right>mz:s/\\%V\\(.*\\)\\%V/\"\\1\"/<CR>`z")
@@ -69,6 +60,7 @@ end)
 
 -- automatically setting a mark when I move up
 vim.keymap.set('n', 'gg', 'magg')
+vim.keymap.set('n', 'G', 'magg')
 
 -- Quickfix list shortcuts
 vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
