@@ -1,3 +1,7 @@
+--[[
+    This is used to give autocomplete suggestions as you type
+    neovim/nvim-lspconfig uses this for additional functionalities
+--]]
 return {
     'saghen/blink.cmp',
     event = 'VimEnter',
