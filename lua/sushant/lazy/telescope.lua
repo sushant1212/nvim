@@ -14,7 +14,7 @@ return {
         config = function()
             require('telescope').setup({
                 defaults = {
-                    layout_strategy='vertical',layout_config={width=0.8}
+                    layout_strategy='horizontal',layout_config={width=0.95}
                 },
 
                 extensions = {
