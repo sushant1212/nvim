@@ -94,7 +94,15 @@ return {
         --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
         --  See `:help lsp-config` for information about keys and how to configure
         local servers = {
-            clangd = {},
+            clangd = {
+                cmd = {
+                    "clangd",
+                    "--query-driver=/usr/bin/aarch64-linux-gnu-gcc",
+                    "--background-index",
+                    "--clang-tidy",
+                    "--header-insertion=never"
+                },
+            },
             gopls = {},
             pyright = {},
             rust_analyzer = {},
