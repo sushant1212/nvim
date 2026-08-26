@@ -42,7 +42,7 @@ vim.keymap.set("v", "<leader>>", "<Right>mz:s/\\%V\\(.*\\)\\%V/<\\1>/<CR>`z")
 
 -- This is for commenting muscle memory
 vim.keymap.set("n", "<C-/>", "gcc", { remap = true })
-vim.keymap.set("v", "<C-/>", "gc", { remap = true })
+vim.keymap.set("v", "<C-/>", "gcgv", { remap = true })
 
 -- Terminal
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
