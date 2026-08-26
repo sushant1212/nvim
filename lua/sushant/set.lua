@@ -1,3 +1,4 @@
+-- THIS FILE IS FOR GLOBAL nvim OPTIONS
 -- vim.opt.guicursor = ""
 
 vim.opt.nu = true
@@ -23,10 +24,9 @@ vim.opt.incsearch = true
 vim.opt.termguicolors = true
 
 vim.opt.scrolloff = 8
-vim.opt.signcolumn = "yes"  -- This adds a column for showing lsp errors
-vim.opt.isfname:append("@-@")
+vim.opt.signcolumn = "yes" -- This adds a column for showing lsp errors
+vim.opt.isfname:append("@-@") -- Adds @ to valid characters in filenames
 
 vim.opt.updatetime = 50
 
-vim.opt.colorcolumn = "120"  -- A colored column number to prevent writing longer lines
-
+vim.opt.colorcolumn = "120" -- A colored column number to prevent writing longer lines
