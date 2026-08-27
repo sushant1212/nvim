@@ -15,10 +15,10 @@ require("sushant.lazy_init")
 -- DO.not
 
 local augroup = vim.api.nvim_create_augroup
-local sushantGroup = augroup('sushant', {})
+local saveGroup = augroup("saveGroup", {})
 
 local autocmd = vim.api.nvim_create_autocmd
-local yank_group = augroup('HighlightYank', {})
+local yank_group = augroup("HighlightYank", {})
 
 function R(name)
     require("plenary.reload").reload_module(name)
@@ -26,40 +26,74 @@ end
 
 vim.filetype.add({
     extension = {
-        templ = 'templ',
-    }
+        templ = "templ",
+    },
 })
 
-autocmd('TextYankPost', {
+autocmd("TextYankPost", {
     group = yank_group,
-    pattern = '*',
+    pattern = "*",
     callback = function()
-        vim.highlight.on_yank({
-            higroup = 'IncSearch',
+        vim.hl.on_yank({
+            higroup = "IncSearch",
             timeout = 40,
         })
     end,
 })
 
-autocmd({"BufWritePre"}, {
-    group = sushantGroup,
+autocmd({ "BufWritePre" }, {
+    group = saveGroup,
     pattern = "*",
     command = [[%s/\s\+$//e]],
 })
 
-autocmd('LspAttach', {
-    group = sushantGroup,
+-- helper functions to enable and disable removing whitespace on save
+function DisableCleanSave()
+    -- create the augroup for idempotency
+    local id = augroup("saveGroup", { clear = false })
+    vim.api.nvim_del_augroup_by_id(id)
+end
+
+function EnableCleanSave()
+    -- create the augroup for idempotency
+    local saveGrp = augroup("saveGroup", { clear = true })
+    autocmd({ "BufWritePre" }, {
+        group = saveGrp,
+        pattern = "*",
+        command = [[%s/\s\+$//e]],
+    })
+end
+
+local lspGroup = augroup("lspGroup", {})
+autocmd("LspAttach", {
+    group = lspGroup,
     callback = function(e)
         local opts = { buffer = e.buf }
-        vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-        vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
-        vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
-        vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
-        vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
-        vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
-        vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-        vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-    end
+        vim.keymap.set("n", "gd", function()
+            vim.lsp.buf.definition()
+        end, opts)
+        vim.keymap.set("n", "K", function()
+            vim.lsp.buf.hover()
+        end, opts)
+        vim.keymap.set("n", "<leader>vws", function()
+            vim.lsp.buf.workspace_symbol()
+        end, opts)
+        vim.keymap.set("n", "<leader>vd", function()
+            vim.diagnostic.open_float()
+        end, opts)
+        vim.keymap.set("n", "<leader>vca", function()
+            vim.lsp.buf.code_action()
+        end, opts)
+        vim.keymap.set("n", "<leader>vrr", function()
+            vim.lsp.buf.references()
+        end, opts)
+        vim.keymap.set("n", "<leader>vrn", function()
+            vim.lsp.buf.rename()
+        end, opts)
+        vim.keymap.set("i", "<C-h>", function()
+            vim.lsp.buf.signature_help()
+        end, opts)
+    end,
 })
 
 vim.g.netrw_browse_split = 0
@@ -70,22 +104,24 @@ vim.g.netrw_winsize = 25
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.schedule(function() vim.o.clipboard = 'unnamedplus' end)
+vim.schedule(function()
+    vim.o.clipboard = "unnamedplus"
+end)
 
 -- disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 -- below and right splits
-vim.opt.splitbelow = true  -- Put new windows below current
-vim.opt.splitright = true  -- Put new windows right of current
+vim.opt.splitbelow = true -- Put new windows below current
+vim.opt.splitright = true -- Put new windows right of current
 
 -- Diagnostic Config & Keymaps
 -- See :help vim.diagnostic.Opts
-vim.diagnostic.config {
+vim.diagnostic.config({
     update_in_insert = false,
     severity_sort = true,
-    float = { border = 'rounded', source = 'if_many' },
+    float = { border = "rounded", source = "if_many" },
     underline = { severity = vim.diagnostic.severity.ERROR },
 
     -- Can switch between these as you prefer
@@ -94,5 +130,4 @@ vim.diagnostic.config {
 
     -- Auto open the float, so you can easily read the errors when jumping with `[d` and `]d`
     jump = { float = true },
-}
-
+})
