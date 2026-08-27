@@ -1,18 +1,18 @@
 return {
     "neovim/nvim-lspconfig",
     dependencies = {
-        { 'mason-org/mason.nvim', opts = {} },
-        'mason-org/mason-lspconfig.nvim',
-        'WhoIsSethDaniel/mason-tool-installer.nvim',
+        { "mason-org/mason.nvim", opts = {} },
+        "mason-org/mason-lspconfig.nvim",
+        "WhoIsSethDaniel/mason-tool-installer.nvim",
 
         -- Useful status updates for LSP.
-        { 'j-hui/fidget.nvim', opts = {} },
+        { "j-hui/fidget.nvim",    opts = {} },
 
         -- NEW: Fast, automatic Neovim setup for lua_ls
-        { "folke/lazydev.nvim", ft = "lua", opts = {} },
+        { "folke/lazydev.nvim",   ft = "lua", opts = {} },
 
         -- Allows extra capabilities provided by blink.cmp
-        'saghen/blink.cmp',
+        "saghen/blink.cmp",
     },
 
     config = function()
@@ -23,8 +23,8 @@ return {
         --    That is to say, every time a new file is opened that is associated with
         --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
         --    function will be executed to configure the current buffer
-        vim.api.nvim_create_autocmd('LspAttach', {
-            group = vim.api.nvim_create_augroup('sushant-lsp-attach', { clear = true }),
+        vim.api.nvim_create_autocmd("LspAttach", {
+            group = vim.api.nvim_create_augroup("sushant-lsp-attach", { clear = true }),
             callback = function(event)
                 -- NOTE: Remember that Lua is a real programming language, and as such it is possible
                 -- to define small helper and utility functions so you don't have to repeat yourself.
@@ -32,16 +32,22 @@ return {
                 -- In this case, we create a function that lets us more easily define mappings specific
                 -- for LSP related items. It sets the mode, buffer and description for us each time.
                 local map = function(keys, func, desc, mode)
-                    mode = mode or 'n'
-                    vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+                    mode = mode or "n"
+                    vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
                 end
 
                 -- Rename the variable under your cursor.
                 --  Most Language Servers support renaming across files, etc.
-                map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
-                map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
+                map("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
+                map("K", vim.lsp.buf.hover, "Hover")
+                map("grn", vim.lsp.buf.rename, "[R]e[n]ame")
+                map("gra", vim.lsp.buf.code_action, "[G]oto Code [A]ction", { "n", "x" })
+                map("grD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+                map("gws", vim.lsp.buf.workspace_symbol, "[W]orkspace [S]ymbol")
+                map("<leader>vd", vim.diagnostic.open_float, "Open float")
+                map("<leader>vrr", vim.lsp.buf.references, "[R]eferences")
+                map("<C-h>", vim.lsp.buf.signature_help, "Signature [H]elp", "i")
 
-                map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
                 local client = vim.lsp.get_client_by_id(event.data.client_id)
                 -- WARN: This is not Goto Definition, this is Goto Declaration.
                 --  For example, in C this would take you to the header.
@@ -51,25 +57,25 @@ return {
                 --    See `:help CursorHold` for information about when this is executed
                 --
                 -- When you move your cursor, the highlights will be cleared (the second autocommand).
-                if client and client:supports_method('textDocument/documentHighlight', event.buf) then
-                    local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
-                    vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+                if client and client:supports_method("textDocument/documentHighlight", event.buf) then
+                    local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
+                    vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
                         buffer = event.buf,
                         group = highlight_augroup,
                         callback = vim.lsp.buf.document_highlight,
                     })
 
-                    vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+                    vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
                         buffer = event.buf,
                         group = highlight_augroup,
                         callback = vim.lsp.buf.clear_references,
                     })
 
-                    vim.api.nvim_create_autocmd('LspDetach', {
-                        group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
+                    vim.api.nvim_create_autocmd("LspDetach", {
+                        group = vim.api.nvim_create_augroup("kickstart-lsp-detach", { clear = true }),
                         callback = function(event2)
                             vim.lsp.buf.clear_references()
-                            vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+                            vim.api.nvim_clear_autocmds({ group = "kickstart-lsp-highlight", buffer = event2.buf })
                         end,
                     })
                 end
@@ -78,8 +84,10 @@ return {
                 -- code, if the language server you are using supports them
                 --
                 -- This may be unwanted, since they displace some of your code
-                if client and client:supports_method('textDocument/inlayHint', event.buf) then
-                    map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
+                if client and client:supports_method("textDocument/inlayHint", event.buf) then
+                    map("<leader>th", function()
+                        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
+                    end, "[T]oggle Inlay [H]ints")
                 end
             end,
         })
@@ -88,7 +96,7 @@ return {
         --  By default, Neovim doesn't support everything that is in the LSP specification.
         --  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
         --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
-        local capabilities = require('blink.cmp').get_lsp_capabilities()
+        local capabilities = require("blink.cmp").get_lsp_capabilities()
 
         -- Enable the following language servers
         --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -100,7 +108,7 @@ return {
                     "--query-driver=/usr/bin/aarch64-linux-gnu-gcc",
                     "--background-index",
                     "--clang-tidy",
-                    "--header-insertion=never"
+                    "--header-insertion=never",
                 },
             },
             gopls = {},
@@ -125,11 +133,11 @@ return {
         --
         -- You can press `g?` for help in this menu.
         local ensure_installed = vim.tbl_keys(servers or {})
-        vim.list_extend(ensure_installed, { 'stylua' })
-        require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+        vim.list_extend(ensure_installed, { "stylua" })
+        require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
         for name, server in pairs(servers) do
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+            server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
             vim.lsp.config(name, server)
             vim.lsp.enable(name)
         end
