@@ -51,7 +51,9 @@ vim.keymap.set("n", "<C-/>", function()
     local newLineLength = #vim.api.nvim_get_current_line()
 
     local count = currCursorCol + newLineLength - currLineLength
-    vim.cmd.normal(tostring(count) .. "l")
+    if count > 0 then
+        vim.cmd.normal(tostring(count) .. "l")
+    end
 end)
 
 vim.keymap.set("v", "<C-/>", function()
