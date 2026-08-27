@@ -41,8 +41,31 @@ vim.keymap.set("v", "<leader><", "<Right>mz:s/\\%V\\(.*\\)\\%V/<\\1>/<CR>`z")
 vim.keymap.set("v", "<leader>>", "<Right>mz:s/\\%V\\(.*\\)\\%V/<\\1>/<CR>`z")
 
 -- This is for commenting muscle memory
-vim.keymap.set("n", "<C-/>", "gcc", { remap = true })
-vim.keymap.set("v", "<C-/>", "gcgv", { remap = true })
+vim.keymap.set("n", "<C-/>", function()
+    local currCursorCol = vim.api.nvim_win_get_cursor(0)[2]
+    local currLineLength = #vim.api.nvim_get_current_line()
+
+    vim.cmd.normal("gcc")
+    vim.cmd.normal("0")
+
+    local newLineLength = #vim.api.nvim_get_current_line()
+
+    local count = currCursorCol + newLineLength - currLineLength
+    vim.cmd.normal(tostring(count) .. "l")
+end)
+
+vim.keymap.set("v", "<C-/>", function()
+    local currCursorCol = vim.api.nvim_win_get_cursor(0)[2]
+    local currLineLength = #vim.api.nvim_get_current_line()
+
+    vim.cmd.normal("gcgv")
+    vim.cmd.normal("0")
+
+    local newLineLength = #vim.api.nvim_get_current_line()
+
+    local count = currCursorCol + newLineLength - currLineLength
+    vim.cmd.normal(tostring(count) .. "l")
+end)
 
 -- Terminal
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
